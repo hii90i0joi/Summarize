@@ -1,0 +1,117 @@
+#moamalnpl.py promate full and buols good
+import os
+import json
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key="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",
+)
+
+BATCH_SIZE = 5  # عدد الصفحات لكل دفعة
+
+def process_txt_files(input_folder, output_json_path):
+     print("🚀 بدأ تحليل النصوص في المسار:", input_folder)
+
+    batches = []
+    current_batch = ""
+    count = 0
+
+    for filename in sorted(os.listdir(input_folder)):
+        if filename.endswith(".txt"):
+            with open(os.path.join(input_folder, filename), "r", encoding="utf-8") as f:
+                content = f.read().strip()
+                if content:
+                    current_batch += f"\n\n=== PAGE: {filename} ===\n{content}"
+                    count += 1
+                    if count == BATCH_SIZE:
+                        batches.append(current_batch)
+                        current_batch = ""
+                        count = 0
+
+    if current_batch.strip():
+        batches.append(current_batch)
+
+    results = []
+
+    for idx, batch_text in enumerate(batches):
+        print(f"\n📦 معالجة الدفعة {idx + 1} من {len(batches)}")
+
+        prompt = f"""
+You are an intelligent MCQ extractor.
+
+You will receive a long text from multiple pages, containing:
+- Questions with numbered format.
+- Answer options starting with letters like A., B., C., etc.
+- Sometimes, questions and options are split across pages.
+- Some pages contain only one or two options (e.g., only "D." or "E.") that continue a question from the previous page.
+- Answer keys might appear later.
+- Each page ends with a line like: "--- Page 12 ---"
+- Ignore filenames like "page_1.txt"; just use the page number from the marker.
+- Some lines contain category labels like "Chapter 1", "Lecture 3", "Unit 2", etc.
+
+Your task:
+1. Parse the content using "--- Page X ---" markers to detect page numbers.
+2. Identify full questions (numbered lines), and collect all following options (starting with A., B., etc.).
+3. If an option like "D." or "E." appears on a new page without a question, assume it belongs to the nearest previous question.
+4. Extract category labels (e.g., "Chapter", "Lecture", "Unit") and assign them to all following questions until a new category is found.
+5. Return a clean JSON array.
+
+Each object must contain:
+- "question": the full question text
+- "options": array of complete options (e.g., ["A. ...", "B. ..."])
+- "answer" (if found)
+- "explanation" (if found)
+- "page": number from "--- Page X ---"
+- "category" (if previously found)
+
+Special notes:
+- If only options are found on a page (e.g., "D."), assume they belong to the latest detected question.
+- Do NOT skip any valid options, even if they are alone on a page.
+- If possible, group late options with the original question in the final JSON.
+- Remove irrelevant lines like headers, footers, or OCR noise.
+
+Return only the final JSON array, no extra text.
+
+Text:
+{batch_text}
+"""
+
+        try:
+            response = client.chat.completions.create(
+                model="openai/gpt-3.5-turbo",
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.2,
+                max_tokens=4000,  # تقليل العدد لتفادي تجاوز الحدود
+            )
+
+            if not response.choices or not response.choices[0].message:
+                print("❌ لا يوجد رد من LLM.")
+                continue
+
+            result_text = response.choices[0].message.content.strip()
+            if result_text.startswith("```json"):
+                result_text = result_text.removeprefix("```json").strip()
+            if result_text.endswith("```"):
+                result_text = result_text.removesuffix("```").strip()
+
+            parsed = json.loads(result_text)
+            cleaned = [
+                {k: v for k, v in item.items() if v is not None}
+                for item in parsed if isinstance(item, dict)
+            ]
+            results.extend(cleaned)
+
+        except Exception as e:
+            print(f"❌ خطأ في الدفعة {idx + 1}: {e}")
+            continue
+
+    if not results:
+        print("⚠️ لم يتم استخراج أي أسئلة.")
+        return
+
+    os.makedirs(os.path.dirname(output_json_path), exist_ok=True)
+    with open(output_json_path, "w", encoding="utf-8") as out_f:
+        json.dump(results, out_f, ensure_ascii=False, indent=2)
+
+    print(f"✅ JSON IS DONE: {output_json_path}") 

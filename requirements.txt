@@ -1,0 +1,12 @@
+google-cloud-vision
+openai
+Pillow
+tqdm
+requests
+beautifulsoup4
+PyMuPDF
+python-dotenv
+Flask
+pdf2image
+gunicorn
+flask-cors 

@@ -1,0 +1,102 @@
+[
+  {
+    "question": "What is Artificial Intelligence (AI)?",
+    "options": [
+      "A. The study of human behavior",
+      "B. Programming computers to make decisions like humans",
+      "C. Designing hardware components",
+      "D. Creating websites"
+    ],
+    "page": "page_1.text"
+  },
+  {
+    "question": "Which of the following is a type of AI?",
+    "options": [
+      "A. Narrow AI",
+      "B. Broad AI",
+      "C. Circuit AI",
+      "D. Machine Web"
+    ],
+    "page": "page_1.text"
+  },
+  {
+    "question": "What does 'machine learning' involve?",
+    "options": [
+      "A. Machines creating new software",
+      "B. Teaching computers to learn from data",
+      "C. Repairing electronic circuits",
+      "D. Writing web pages"
+    ],
+    "page": "page_1.text"
+  },
+  {
+    "question": "Which language is commonly used for AI programming?",
+    "options": [
+      "A. HTML",
+      "B. Python",
+      "C. CSS",
+      "D. PHP"
+    ],
+    "page": "page_1.text"
+  },
+  {
+    "question": "Which AI technique is inspired by the human brain?",
+    "options": [
+      "A. Neural Networks",
+      "B. Decision Trees",
+      "C. Rule-based Systems",
+      "D. Sorting Algorithms"
+    ],
+    "page": "page_1.text"
+  },
+  {
+    "question": "What is 'Deep Learning'?",
+    "options": [
+      "A. Learning about oceans",
+      "B. A complex form of machine learning using neural networks",
+      "C. A type of programming language",
+      "D. Simple arithmetic operations"
+    ],
+    "page": "page_2.text"
+  },
+  {
+    "question": "What is Natural Language Processing (NLP)?",
+    "options": [
+      "A. Programming robots",
+      "B. Using natural elements in circuits",
+      "C. Teaching machines to understand human language",
+      "D. Writing computer games"
+    ],
+    "page": "page_2.text"
+  },
+  {
+    "question": "What is the Turing Test used for?",
+    "options": [
+      "A. Measuring CPU speed",
+      "B. Testing machine intelligence",
+      "C. Checking grammar errors",
+      "D. Evaluating websites"
+    ],
+    "page": "page_2.text"
+  },
+  {
+    "question": "Which company developed the AI 'ChatGPT'?",
+    "options": [
+      "A. Google",
+      "B. Microsoft",
+      "C. IBM",
+      "D. OpenAI"
+    ],
+    "page": "page_2.text"
+  },
+  {
+    "question": "What is reinforcement learning?",
+    "options": [
+      "A. Learning through trial and error with feedback",
+      "B. Learning history topics",
+      "C. Studying hardware design",
+      "D. Reinforcing security systems"
+    ],
+    "page": "page_3.text"
+  }
+]
