@@ -46,7 +46,7 @@ Text:
 
         try:
             response = client.chat.completions.create(
-                model="openai/gpt-3.5-turbo",
+                model="openai/gpt-3.5-turbo-0613",
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.3,
                 max_tokens=4000,
