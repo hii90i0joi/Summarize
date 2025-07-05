@@ -36,12 +36,42 @@ def process_txt_files(input_folder, output_json_path=None):
         print("📤 النصوص قبل الإرسال:\n", batch_text[:500])
 
         prompt = f"""
-You are an intelligent document parser. You will be given the raw extracted text from an invoice document. Your task is to extract key fields in a structured JSON format. Please analyze the content carefully, even if it's in different languages, layouts, or currencies. If a field is missing, return it as null. --- Return the output strictly in the following JSON structure: { "issuer": "...", "invoice_number": "...", "case_number": "...", "patient_name": "...", "date": "...", "currency": "...", "payment_type": "...", "total_amount": "...", "discount": "...", "final_amount": "...", "items": [ { "description": "...", "quantity": "...", "unit_price": "...", "total_price": "..." } ], "creation_time": "...", "printed_time": "..." } Also return the language 
-detected in the invoice as: "language": "Arabic" / "English" / etc. Here is the text extracted from the invoice: 
+You are an intelligent document parser. You will be given the raw extracted text from an invoice document. Your task is to extract key fields in a structured JSON format. Please analyze the content carefully, even if it's in different languages, layouts, or currencies. If a field is missing, return it as null.
+
+---
+
+Return the output strictly in the following JSON structure:
+
+{{
+  "issuer": "...",
+  "invoice_number": "...",
+  "case_number": "...",
+  "patient_name": "...",
+  "date": "...",
+  "currency": "...",
+  "payment_type": "...",
+  "total_amount": "...",
+  "discount": "...",
+  "final_amount": "...",
+  "items": [
+    {{
+      "description": "...",
+      "quantity": "...",
+      "unit_price": "...",
+      "total_price": "..."
+    }}
+  ],
+  "creation_time": "...",
+  "printed_time": "...",
+  "language": "Arabic" / "English" / etc.
+}}
+
+Here is the text extracted from the invoice:
 
 Text:
 {batch_text}
 """
+
 
         try:
             response = client.chat.completions.create(
